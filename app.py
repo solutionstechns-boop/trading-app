@@ -1,7 +1,11 @@
 import streamlit as st
+import requests
 
-st.title("Meu App de Trading ??")
+st.title("📊 Painel BTC em Tempo Real")
 
-st.write("Sistema online funcionando!")
+url = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+data = requests.get(url).json()
 
-st.write("Sinal: COMPRA ??")
+preco = float(data["price"])
+
+st.metric("💰 Preço BTC", f"${preco:,.2f}")
