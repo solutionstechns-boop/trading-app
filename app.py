@@ -7,17 +7,34 @@ st.set_page_config(layout="wide")
 st.title("🔥 Painel Profissional BTC")
 
 # ======================
-# PEGAR DADOS
+# PEGAR DADOS (COM PROTEÇÃO)
 # ======================
 url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100"
-data = requests.get(url).json()
 
+response = requests.get(url)
+
+if response.status_code != 200:
+    st.error("Erro ao conectar com a Binance")
+    st.stop()
+
+data = response.json()
+
+if not data or len(data) == 0:
+    st.error("Sem dados recebidos")
+    st.stop()
+
+# ======================
+# CRIAR DATAFRAME
+# ======================
 df = pd.DataFrame(data, columns=[
     "time","open","high","low","close","volume",
     "close_time","qav","trades","tbbav","tbqav","ignore"
 ])
 
-df["close"] = df["close"].astype(float)
+# converter com segurança
+df["close"] = pd.to_numeric(df["close"], errors="coerce")
+
+df.dropna(inplace=True)
 
 # ======================
 # INDICADORES
@@ -25,7 +42,7 @@ df["close"] = df["close"].astype(float)
 df["ema9"] = df["close"].ewm(span=9).mean()
 df["ema21"] = df["close"].ewm(span=21).mean()
 
-# RSI simples
+# RSI
 delta = df["close"].diff()
 gain = delta.clip(lower=0)
 loss = -delta.clip(upper=0)
@@ -36,9 +53,15 @@ avg_loss = loss.rolling(14).mean()
 rs = avg_gain / avg_loss
 df["rsi"] = 100 - (100 / (1 + rs))
 
+df.dropna(inplace=True)
+
 # ======================
-# LÓGICA DE SINAL
+# SINAL
 # ======================
+if len(df) < 30:
+    st.warning("Poucos dados ainda...")
+    st.stop()
+
 last = df.iloc[-1]
 
 tendencia = "LATERAL"
