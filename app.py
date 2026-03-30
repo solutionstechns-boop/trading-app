@@ -1,9 +1,41 @@
 import streamlit as st
-import random
 
 st.set_page_config(layout="wide")
 
-st.title("🔥 PAINEL TRADER PRO")
+# ======================
+# ESTILO PROFISSIONAL
+# ======================
+st.markdown("""
+<style>
+body {
+    background-color: #0e1117;
+}
+h1 {
+    color: #00ffcc;
+    text-align: center;
+}
+.metric-box {
+    background: #1c1f26;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("🚀 PAINEL TRADER PRO")
+
+# ======================
+# DASHBOARD TOPO
+# ======================
+col1, col2, col3 = st.columns(3)
+
+col1.markdown('<div class="metric-box">⏱️ 1M<br><b>COMPRA 🟢</b></div>', unsafe_allow_html=True)
+col2.markdown('<div class="metric-box">⏱️ 5M<br><b>VENDA 🔴</b></div>', unsafe_allow_html=True)
+col3.markdown('<div class="metric-box">⏱️ 15M<br><b>AGUARDAR ⚪</b></div>', unsafe_allow_html=True)
+
+st.markdown("---")
 
 # ======================
 # GRÁFICO TRADINGVIEW
@@ -28,52 +60,23 @@ tradingview_widget = """
 """
 st.components.v1.html(tradingview_widget, height=550)
 
-# ======================
-# SINAIS POR TIMEFRAME
-# ======================
-st.subheader("📊 Sinais por Tempo Gráfico")
-
-def gerar_sinal():
-    sinais = ["COMPRA 🟢", "VENDA 🔴", "AGUARDAR ⚪"]
-    return random.choice(sinais)
-
-col1, col2, col3 = st.columns(3)
-
-col1.metric("⏱️ 1 Min", gerar_sinal())
-col2.metric("⏱️ 5 Min", gerar_sinal())
-col3.metric("⏱️ 15 Min", gerar_sinal())
+st.markdown("---")
 
 # ======================
-# REGIÕES (SIMULAÇÃO)
+# ESTRATÉGIA
 # ======================
-st.subheader("📍 Regiões Importantes")
+colA, colB = st.columns(2)
 
-regioes = [
-    "Suporte forte próximo",
-    "Resistência sendo testada",
-    "Zona de reversão",
-    "Região neutra"
-]
+with colA:
+    st.subheader("🎯 Estratégia")
+    st.success("Entrada: Pullback + tendência")
+    st.write("Saída: resistência ou alvo")
 
-st.info(random.choice(regioes))
+with colB:
+    st.subheader("📍 Região")
+    st.info("Zona de suporte forte")
 
-# ======================
-# ENTRADA E SAÍDA
-# ======================
-st.subheader("🎯 Estratégia Atual")
-
-sinal = gerar_sinal()
-
-if "COMPRA" in sinal:
-    st.success("Entrada: Pullback + confirmação de alta")
-    st.write("Saída: Próxima resistência")
-
-elif "VENDA" in sinal:
-    st.error("Entrada: Rejeição + tendência de baixa")
-    st.write("Saída: Próximo suporte")
-
-else:
-    st.warning("Mercado lateral — aguardar melhor ponto")
+st.markdown("---")
 
 # ======================
 # NOTÍCIAS
@@ -81,7 +84,7 @@ else:
 st.subheader("📰 Notícias do Mercado")
 
 st.markdown("""
-- [Bitcoin sobe com mercado otimista](https://www.google.com/search?q=bitcoin+noticias)
-- [Análise do mercado cripto hoje](https://www.google.com/search?q=crypto+market+news)
-- [Impacto econômico no BTC](https://www.google.com/search?q=bitcoin+economia)
+- Bitcoin sobe com mercado otimista  
+- Expectativa de alta no curto prazo  
+- Mercado atento a dados econômicos  
 """)
