@@ -3,14 +3,14 @@ import random
 
 st.set_page_config(layout="wide")
 
-st.title("🔥 Painel Trader PRO")
+st.title("🔥 PAINEL TRADER PRO")
 
 # ======================
-# TRADINGVIEW
+# GRÁFICO TRADINGVIEW
 # ======================
 tradingview_widget = """
 <div class="tradingview-widget-container">
-  <div id="tradingview_chart"></div>
+  <div id="tv_chart"></div>
   <script src="https://s3.tradingview.com/tv.js"></script>
   <script>
   new TradingView.widget({
@@ -21,62 +21,67 @@ tradingview_widget = """
     "theme": "dark",
     "style": "1",
     "locale": "br",
-    "container_id": "tradingview_chart"
+    "container_id": "tv_chart"
   });
   </script>
 </div>
 """
-
 st.components.v1.html(tradingview_widget, height=550)
 
 # ======================
-# SINAIS AUTOMÁTICOS (SIMULAÇÃO INTELIGENTE)
+# SINAIS POR TIMEFRAME
 # ======================
+st.subheader("📊 Sinais por Tempo Gráfico")
 
-sinais = ["COMPRA 🟢", "VENDA 🔴", "AGUARDAR ⚪"]
-tendencias = ["ALTA 📈", "BAIXA 📉", "LATERAL 🔄"]
-
-sinal = random.choice(sinais)
-tendencia = random.choice(tendencias)
-forca = random.randint(60, 95)
+def gerar_sinal():
+    sinais = ["COMPRA 🟢", "VENDA 🔴", "AGUARDAR ⚪"]
+    return random.choice(sinais)
 
 col1, col2, col3 = st.columns(3)
 
-col1.metric("📊 Tendência", tendencia)
-col2.metric("🎯 Sinal", sinal)
-col3.metric("⚡ Força", f"{forca}%")
+col1.metric("⏱️ 1 Min", gerar_sinal())
+col2.metric("⏱️ 5 Min", gerar_sinal())
+col3.metric("⏱️ 15 Min", gerar_sinal())
 
 # ======================
-# MARCAÇÕES (EXPLICAÇÃO)
+# REGIÕES (SIMULAÇÃO)
 # ======================
-st.subheader("📍 Pontos de Entrada e Saída")
+st.subheader("📍 Regiões Importantes")
 
-if sinal == "COMPRA 🟢":
-    st.success("📈 Entrada: Pullback + confirmação de alta")
-    st.write("🎯 Saída: resistência próxima ou RSI alto")
+regioes = [
+    "Suporte forte próximo",
+    "Resistência sendo testada",
+    "Zona de reversão",
+    "Região neutra"
+]
 
-elif sinal == "VENDA 🔴":
-    st.error("📉 Entrada: Pullback + rejeição")
-    st.write("🎯 Saída: suporte ou RSI baixo")
+st.info(random.choice(regioes))
+
+# ======================
+# ENTRADA E SAÍDA
+# ======================
+st.subheader("🎯 Estratégia Atual")
+
+sinal = gerar_sinal()
+
+if "COMPRA" in sinal:
+    st.success("Entrada: Pullback + confirmação de alta")
+    st.write("Saída: Próxima resistência")
+
+elif "VENDA" in sinal:
+    st.error("Entrada: Rejeição + tendência de baixa")
+    st.write("Saída: Próximo suporte")
 
 else:
-    st.warning("⚠️ Mercado lateral — melhor aguardar")
+    st.warning("Mercado lateral — aguardar melhor ponto")
 
 # ======================
-# INDICADORES RECOMENDADOS
-# ======================
-st.subheader("📊 Indicadores recomendados")
-
-st.write("""
-- Média móvel 9 e 21 (tendência)
-- RSI (força)
-- Estocástico (timing)
-- Fractais (topos e fundos)
-""")
-
-# ======================
-# NOTÍCIAS (GOOGLE)
+# NOTÍCIAS
 # ======================
 st.subheader("📰 Notícias do Mercado")
 
-st.markdown("[Ver notícias sobre Bitcoin no Google](https://www.google.com/search?q=bitcoin+noticias)")
+st.markdown("""
+- [Bitcoin sobe com mercado otimista](https://www.google.com/search?q=bitcoin+noticias)
+- [Análise do mercado cripto hoje](https://www.google.com/search?q=crypto+market+news)
+- [Impacto econômico no BTC](https://www.google.com/search?q=bitcoin+economia)
+""")
